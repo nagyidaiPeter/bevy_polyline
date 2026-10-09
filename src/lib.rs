@@ -4,6 +4,7 @@
 use bevy::{
     asset::{load_internal_asset, uuid_handle},
     prelude::*,
+    shader::Shader,
 };
 use material::PolylineMaterialPlugin;
 use polyline::{PolylineBasePlugin, PolylineRenderPlugin};
@@ -25,8 +26,8 @@ impl Plugin for PolylinePlugin {
         load_internal_asset!(
             app,
             SHADER_HANDLE,
-            "shaders/polyline.wgsl",
-            Shader::from_wgsl
+            "shaders/polyline.wesl",
+            Shader::from_wesl
         );
 
         app.add_plugins((

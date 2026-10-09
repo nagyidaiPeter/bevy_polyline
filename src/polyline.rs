@@ -11,6 +11,7 @@ use bevy::{
     mesh::VertexBufferLayout,
     prelude::*,
     reflect::TypePath,
+    shader::Shader,
     render::{
         camera::PendingQueues,
         extract_component::{
@@ -114,7 +115,7 @@ pub struct PolylineUniform {
     pub transform: Mat4,
 }
 
-impl SyncComponent for PolylineUniform {
+impl SyncComponent<RenderApp> for PolylineUniform {
     type Target = Self;
 }
 
@@ -125,7 +126,7 @@ pub struct GpuPolyline {
     pub vertex_count: u32,
 }
 
-impl ExtractComponent for PolylineUniform {
+impl ExtractComponent<RenderApp> for PolylineUniform {
     type QueryData = (
         &'static GlobalTransform,
         &'static InheritedVisibility,
@@ -259,6 +260,7 @@ impl SpecializedRenderPipeline for PolylinePipeline {
                     vertex_layout.attributes[0].shader_location = 1;
                     vertex_layout
                 }],
+                ..Default::default()
             },
             fragment: Some(FragmentState {
                 shader: self.shader.clone(),
@@ -269,6 +271,7 @@ impl SpecializedRenderPipeline for PolylinePipeline {
                     blend,
                     write_mask: ColorWrites::ALL,
                 })],
+                ..Default::default()
             }),
             layout: vec![], // This is set in `PolylineMaterialPipeline::specialize()`
             primitive: PrimitiveState {
